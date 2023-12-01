@@ -8,7 +8,7 @@ import scheduledEmailsTable, {
 
 export const BulkEmailContext = React.createContext();
 
-export default function BulkEmailProvider({ children }) {
+const BulkEmailProvider = ({ children }) => {
   const initialState = {
     editor: editorInitialState,
     scheduledEmailsTable: scheduledEmailsTableInitialState,
@@ -17,9 +17,12 @@ export default function BulkEmailProvider({ children }) {
     combineReducers({ editor, scheduledEmailsTable }),
     initialState,
   );
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
   return <BulkEmailContext.Provider value={[state, dispatch]}>{children}</BulkEmailContext.Provider>;
-}
+};
 
 BulkEmailProvider.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
 };
+
+export default BulkEmailProvider;

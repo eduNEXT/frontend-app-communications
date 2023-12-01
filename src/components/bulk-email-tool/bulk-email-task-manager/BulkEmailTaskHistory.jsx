@@ -11,7 +11,7 @@ import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
 import './bulkEmailTaskHistory.scss';
 
-function BulkEmailTaskHistory({ intl }) {
+const BulkEmailTaskHistory = ({ intl }) => {
   const { courseId } = useParams();
 
   const [emailTaskHistoryData, setEmailTaskHistoryData] = useState([]);
@@ -89,6 +89,7 @@ function BulkEmailTaskHistory({ intl }) {
         <Collapsible
           styling="card"
           title={intl.formatMessage(messages.emailTaskHistoryTableSectionButton)}
+          // eslint-disable-next-line react/jsx-no-bind
           onOpen={fetchEmailTaskHistoryData}
         >
           {showHistoricalTaskContentTable ? (
@@ -106,7 +107,7 @@ function BulkEmailTaskHistory({ intl }) {
       </div>
     </div>
   );
-}
+};
 
 BulkEmailTaskHistory.propTypes = {
   intl: intlShape.isRequired,

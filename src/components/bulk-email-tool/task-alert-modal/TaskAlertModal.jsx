@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ActionRow, AlertModal, Button } from '@edx/paragon';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
-function TaskAlertModal(props) {
+const TaskAlertModal = (props) => {
   const {
     isOpen, close, alertMessage, intl,
   } = props;
@@ -40,6 +40,7 @@ function TaskAlertModal(props) {
                 // causing strange click event target issues in safari. To solve this, we want to
                 // wrap the string in a fragment instead of a span, so that the whole button considered
                 // a "button" target, and not a "span inside a button"
+                // eslint-disable-next-line react/jsx-no-useless-fragment
                 msg => <>{msg}</>
               }
             </FormattedMessage>
@@ -50,7 +51,7 @@ function TaskAlertModal(props) {
       {alertMessage}
     </AlertModal>
   );
-}
+};
 
 TaskAlertModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,

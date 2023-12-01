@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react/no-unstable-nested-components */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
@@ -12,7 +14,7 @@ import { getSentEmailHistory } from './data/api';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 import ViewEmailModal from './ViewEmailModal';
 
-function BulkEmailContentHistory({ intl }) {
+const BulkEmailContentHistory = ({ intl }) => {
   const { courseId } = useParams();
   const [emailHistoryData, setEmailHistoryData] = useState();
   const [errorRetrievingData, setErrorRetrievingData] = useState(false);
@@ -150,7 +152,7 @@ function BulkEmailContentHistory({ intl }) {
       </div>
     </div>
   );
-}
+};
 
 BulkEmailContentHistory.propTypes = {
   intl: intlShape.isRequired,
