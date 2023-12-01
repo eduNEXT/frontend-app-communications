@@ -36,10 +36,10 @@
   },
   "dependencies": {
     "@edx/brand": "npm:@edx/brand-openedx@1.1.0",
-    "@edx/frontend-component-footer": "11.2.1",
-    "@edx/frontend-component-header": "3.2.1",
-    "@edx/frontend-platform": "2.6.2",
-    "@edx/paragon": "19.25.3",
+    "@edx/frontend-component-footer": "npm:@edunext/frontend-component-footer@13.0.0-alpha.5",
+    "@edx/frontend-component-header": "npm:@edunext/frontend-component-header@5.0.0-alpha.5",
+    "@edx/frontend-platform": "npm:@edunext/frontend-platform@3.7.0-alpha.14",
+    "@edx/paragon": "22.0.0-alpha.13",
     "@edx/tinymce-language-selector": "1.1.0",
     "@fortawesome/fontawesome-svg-core": "1.2.36",
     "@fortawesome/free-brands-svg-icons": "5.15.4",
@@ -63,7 +63,9 @@
     "tinymce": "5.10.5"
   },
   "devDependencies": {
-    "@edx/frontend-build": "9.2.2",
+    "@edx/browserslist-config": "^1.2.0",
+    "@edx/frontend-build": "github:edunext/frontend-build#ednx-release/css-variables",
+    "@edx/reactifex": "^2.1.1",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.5",
     "axios-mock-adapter": "1.21.2",
