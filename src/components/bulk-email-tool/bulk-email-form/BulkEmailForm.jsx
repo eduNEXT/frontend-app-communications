@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/no-unstable-nested-components */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -45,7 +47,7 @@ const FORM_ACTIONS = {
   PATCH: 'PATCH',
 };
 
-function BulkEmailForm(props) {
+const BulkEmailForm = (props) => {
   const { courseId, cohorts, intl } = props;
   const [{ editor }, dispatch] = useContext(BulkEmailContext);
   const [emailFormStatus, setEmailFormStatus] = useState(FORM_SUBMIT_STATES.DEFAULT);
@@ -372,7 +374,7 @@ function BulkEmailForm(props) {
       </Form>
     </div>
   );
-}
+};
 
 BulkEmailForm.defaultProps = {
   cohorts: [],

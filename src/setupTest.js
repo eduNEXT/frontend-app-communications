@@ -8,6 +8,7 @@ import { configure as configureI18n, IntlProvider } from '@edx/frontend-platform
 import { configure as configureLogging, MockLoggingService } from '@edx/frontend-platform/logging';
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { configure as configureAuth, MockAuthService } from '@edx/frontend-platform/auth';
+import { configure as configureAnalytics, MockAnalyticsService } from '@edx/frontend-platform/analytics';
 import appMessages from './i18n';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -47,19 +48,24 @@ export function initializeMockApp() {
   });
 
   const authService = configureAuth(MockAuthService, { config: getConfig(), loggingService });
-  return { loggingService, i18nService, authService };
+  const analyticsService = configureAnalytics(MockAnalyticsService, {
+    config: getConfig(),
+    httpClient: authService.getAuthenticatedHttpClient(),
+    loggingService,
+  });
+  return {
+    loggingService, i18nService, authService, analyticsService,
+  };
 }
 
 function render(ui, options) {
   // eslint-disable-next-line react/prop-types
-  function Wrapper({ children }) {
-    return (
-      // eslint-disable-next-line react/jsx-filename-extension
-      <IntlProvider locale="en">
-        <AppProvider>{children}</AppProvider>
-      </IntlProvider>
-    );
-  }
+  const Wrapper = ({ children }) => (
+    // eslint-disable-next-line react/jsx-filename-extension
+    <IntlProvider locale="en">
+      <AppProvider>{children}</AppProvider>
+    </IntlProvider>
+  );
   return rtlRender(ui, { wrapper: Wrapper, ...options });
 }
 

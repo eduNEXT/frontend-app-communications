@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import React, {
   useCallback, useContext, useState, useEffect,
@@ -29,7 +31,7 @@ function flattenScheduledEmailsArray(emails) {
   }));
 }
 
-function BulkEmailScheduledEmailsTable({ intl }) {
+const BulkEmailScheduledEmailsTable = ({ intl }) => {
   const { courseId } = useParams();
   const [{ scheduledEmailsTable }, dispatch] = useContext(BulkEmailContext);
   const [tableData, setTableData] = useState([]);
@@ -190,7 +192,7 @@ function BulkEmailScheduledEmailsTable({ intl }) {
       </div>
     </>
   );
-}
+};
 
 BulkEmailScheduledEmailsTable.propTypes = {
   intl: intlShape.isRequired,
