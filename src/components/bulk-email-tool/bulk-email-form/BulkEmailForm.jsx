@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {
   Button,
   Form, Icon, StatefulButton, Toast, useToggle,
-  Card,
 } from '@edx/paragon';
 import {
   SpinnerSimple, Cancel, Send, Event, Check,
@@ -16,7 +15,6 @@ import TextEditor from '../text-editor/TextEditor';
 import BulkEmailRecipient from './bulk-email-recipient';
 import TaskAlertModal from '../task-alert-modal';
 import useTimeout from '../../../utils/useTimeout';
-import PluggableComponent from '../../PluggableComponent';
 import useMobileResponsive from '../../../utils/useMobileResponsive';
 import ScheduleEmailForm from './ScheduleEmailForm';
 import messages from './messages';
@@ -62,6 +60,7 @@ function BulkEmailForm(props) {
   const [isTaskAlertOpen, openTaskAlert, closeTaskAlert] = useToggle(false);
   const [isScheduled, toggleScheduled] = useState(false);
   const isMobile = useMobileResponsive();
+  const [emailLearnersList, setEmailLearnersList] = useState([]);
 
   /**
    * Since we are working with both an old and new API endpoint, the body for the POST
@@ -71,12 +70,17 @@ function BulkEmailForm(props) {
    * @returns formatted Data
    */
   const formatDataForFormAction = (action) => {
+    const emailsIndividualLearners = emailLearnersList.map(({ email }) => email);
+    const extraTargets = { emails: emailsIndividualLearners };
+    const emailRecipients = editor.emailRecipients.filter((recipient) => recipient !== 'individual-learners-emails');
+
     if (action === FORM_ACTIONS.POST) {
       const emailData = new FormData();
       emailData.append('action', 'send');
-      emailData.append('send_to', JSON.stringify(editor.emailRecipients));
+      emailData.append('send_to', JSON.stringify(emailRecipients));
       emailData.append('subject', editor.emailSubject);
       emailData.append('message', editor.emailBody);
+      emailData.append('extra_targets', JSON.stringify(extraTargets));
       if (isScheduled) {
         emailData.append('schedule', new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toISOString());
       }
@@ -85,7 +89,7 @@ function BulkEmailForm(props) {
     if (action === FORM_ACTIONS.PATCH) {
       return {
         email: {
-          targets: editor.emailRecipients,
+          targets: emailRecipients,
           subject: editor.emailSubject,
           message: editor.emailBody,
           id: editor.emailId,
@@ -127,6 +131,8 @@ function BulkEmailForm(props) {
       dispatch(addRecipient(event.target.value));
       // if "All Learners" is checked then we want to remove any cohorts, verified learners, and audit learners
       if (event.target.value === 'learners') {
+        // Clean the emails list when select "All Learners"
+        setEmailLearnersList([]);
         editor.emailRecipients.forEach(recipient => {
           if (/^cohort/.test(recipient) || /^track/.test(recipient)) {
             dispatch(removeRecipient(recipient));
@@ -163,6 +169,7 @@ function BulkEmailForm(props) {
 
   const createEmailTask = async () => {
     if (validateEmailForm()) {
+      console.log('editor.editMode', editor.editMode);
       if (editor.editMode) {
         const editedEmail = formatDataForFormAction(FORM_ACTIONS.PATCH);
         await dispatch(editScheduledEmailThunk(editedEmail, courseId, editor.schedulingId));
@@ -210,6 +217,36 @@ function BulkEmailForm(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScheduled, editor.editMode, editor.isLoading, editor.errorRetrievingData, editor.formComplete]);
+
+  /*
+   This will be checking if there are emails added to the emailLearnersList state
+   if so, we will delete emailRecipients "learners" because that is for all learners
+   if not, we will delete the individual-learners-emails from emailRecipients because of we won't use the emails
+  */
+  useEffect(() => {
+    if (emailLearnersList.length && !editor.emailRecipients.includes('individual-learners-emails')) {
+      dispatch(addRecipient('individual-learners-emails'));
+      if (editor.emailRecipients.includes('learners')) {
+        dispatch(removeRecipient('learners'));
+      }
+    } else if (!emailLearnersList.length && editor.emailRecipients.includes('individual-learners-emails')) {
+      dispatch(removeRecipient('individual-learners-emails'));
+    }
+  }, [dispatch, editor.emailRecipients, emailLearnersList]);
+
+  // When the user selects an email from input autocomplete list
+  const handleEmailLearnersSelected = (emailSelected) => {
+    const [firstItem] = emailSelected;
+    if (firstItem) {
+      setEmailLearnersList([...emailLearnersList, firstItem]);
+    }
+  };
+
+  // To delete an email from learners list, that list is on the bottom of the input autocomplete
+  const handleDeleteEmailLearnerSelected = (idToDelete) => {
+    const setEmailLearnersListUpdated = emailLearnersList.filter(({ id }) => id !== idToDelete);
+    setEmailLearnersList(setEmailLearnersListUpdated);
+  };
 
   const AlertMessage = () => (
     <>
@@ -269,49 +306,15 @@ function BulkEmailForm(props) {
         }}
       />
       <Form>
-        {/* this will be pluggable */}
-        <div className="border border-brand-400 p-3">
-          <h1>Pluggable components</h1>
-          <PluggableComponent
-            id="checkbox-form"
-            as="communications-app-check-box-form"
-            label="checkbox label - @openedx-plugins/communications-app-check-box-form"
-            isChecked
-          >
-            <h1>Checkbox -default</h1>
-          </PluggableComponent>
-
-          <PluggableComponent
-            id="input-form"
-            as="communications-app-input-form"
-            isValid
-            label="Hello"
-            feedbackText="This is okay"
-            controlId="test"
-          >
-            <h1>Input -default</h1>
-          </PluggableComponent>
-          {/* this will return default child if the plugin has not been installed  */}
-          <PluggableComponent id="card-form" as="communications-app-card">
-            <Card className="my-4 p-3 col-6 border border-success-300 w-100">
-              <Card.ImageCap
-                src="https://picsum.photos/360/200/"
-                srcAlt="Card image"
-
-              />
-              <Card.Section className="text-center">
-                <h2>Default Card</h2>
-              </Card.Section>
-              <p className="my-3">@openedx-plugins/communications-app-card</p>
-            </Card>
-          </PluggableComponent>
-        </div>
-
         <BulkEmailRecipient
           selectedGroups={editor.emailRecipients}
           handleCheckboxes={onRecipientChange}
           additionalCohorts={cohorts}
           isValid={emailFormValidation.recipients}
+          emailLearnersList={emailLearnersList}
+          handleLearnersEmailSelected={handleEmailLearnersSelected}
+          handleLearnersDeleteEmail={handleDeleteEmailLearnerSelected}
+          courseId={courseId}
         />
         <Form.Group controlId="emailSubject">
           <Form.Label className="h3 text-primary-500">{intl.formatMessage(messages.bulkEmailSubjectLabel)}</Form.Label>

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from '@edx/paragon';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import PluggableComponent from '../../../PluggableComponent';
 
 import './bulkEmailRecepient.scss';
 
@@ -14,7 +15,10 @@ const DEFAULT_GROUPS = {
 };
 
 export default function BulkEmailRecipient(props) {
-  const { handleCheckboxes, selectedGroups, additionalCohorts } = props;
+  const {
+    handleCheckboxes, selectedGroups, additionalCohorts, handleLearnersEmailSelected,
+    emailLearnersList, handleLearnersDeleteEmail, courseId,
+  } = props;
   return (
     <Form.Group>
       <Form.Label>
@@ -104,6 +108,16 @@ export default function BulkEmailRecipient(props) {
           />
         </Form.Checkbox>
       </Form.CheckboxSet>
+
+      <PluggableComponent
+        id="individual-learners"
+        as="communications-app-individual-emails"
+        courseId={courseId}
+        handleEmailSelected={handleLearnersEmailSelected}
+        emailList={emailLearnersList}
+        handleDeleteEmail={handleLearnersDeleteEmail}
+      />
+
       {!props.isValid && (
         <Form.Control.Feedback className="px-3" hasIcon type="invalid">
           <FormattedMessage
@@ -120,6 +134,10 @@ export default function BulkEmailRecipient(props) {
 BulkEmailRecipient.defaultProps = {
   isValid: true,
   additionalCohorts: [],
+  courseId: '',
+  handleLearnersEmailSelected: () => {},
+  handleLearnersDeleteEmail: () => {},
+  emailLearnersList: [],
 };
 
 BulkEmailRecipient.propTypes = {
@@ -127,4 +145,14 @@ BulkEmailRecipient.propTypes = {
   handleCheckboxes: PropTypes.func.isRequired,
   isValid: PropTypes.bool,
   additionalCohorts: PropTypes.arrayOf(PropTypes.string),
+  courseId: PropTypes.string,
+  handleLearnersEmailSelected: PropTypes.func,
+  handleLearnersDeleteEmail: PropTypes.func,
+  emailLearnersList: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired,
+    }),
+  ),
 };

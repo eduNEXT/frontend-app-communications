@@ -8,7 +8,7 @@ import {
   postBulkEmailError,
   postBulkEmailStart,
 } from './actions';
-import { patchScheduledBulkEmailInstructorTask, postBulkEmailInstructorTask } from './api';
+import { patchScheduledBulkEmailInstructorTask, postBulkEmailInstructorTaskSendEmails } from './api';
 
 export function postBulkEmailThunk(emailData, courseId) {
   return async (dispatch) => {
@@ -23,7 +23,7 @@ export function postBulkEmailThunk(emailData, courseId) {
       return error;
     }
     try {
-      const data = await postBulkEmailInstructorTask(emailData, courseId);
+      const data = await postBulkEmailInstructorTaskSendEmails(emailData, courseId);
       return onComplete(data);
     } catch (error) {
       return onError(error);
