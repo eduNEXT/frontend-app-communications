@@ -169,7 +169,6 @@ function BulkEmailForm(props) {
 
   const createEmailTask = async () => {
     if (validateEmailForm()) {
-      console.log('editor.editMode', editor.editMode);
       if (editor.editMode) {
         const editedEmail = formatDataForFormAction(FORM_ACTIONS.PATCH);
         await dispatch(editScheduledEmailThunk(editedEmail, courseId, editor.schedulingId));
