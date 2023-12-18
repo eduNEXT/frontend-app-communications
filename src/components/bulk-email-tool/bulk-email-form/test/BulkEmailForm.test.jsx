@@ -123,7 +123,7 @@ describe('bulk-email-form', () => {
     expect(screen.getByText('Date and time cannot be blank, and must be a date in the future'));
   });
   test('Adds scheduling data to POST requests when schedule is selected', async () => {
-    const postBulkEmailInstructorTask = jest.spyOn(bulkEmailFormApi, 'postBulkEmailInstructorTask');
+    const postBulkEmailInstructorTaskSendEmails = jest.spyOn(bulkEmailFormApi, 'postBulkEmailInstructorTaskSendEmails');
     render(renderBulkEmailForm());
     fireEvent.click(screen.getByRole('checkbox', { name: 'Myself' }));
     fireEvent.change(screen.getByRole('textbox', { name: 'Subject' }), { target: { value: 'test subject' } });
@@ -139,7 +139,7 @@ describe('bulk-email-form', () => {
     const continueButton = await screen.findByRole('button', { name: /continue/i });
     fireEvent.click(continueButton);
     expect(appendMock).toHaveBeenCalledWith('schedule', expect.stringContaining(formatDate(tomorrow)));
-    expect(postBulkEmailInstructorTask).toHaveBeenCalledWith(expect.any(FormData), expect.stringContaining('test'));
+    expect(postBulkEmailInstructorTaskSendEmails).toHaveBeenCalledWith(expect.any(FormData), expect.stringContaining('test'));
   });
   test('will PATCH instead of POST when in edit mode', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
