@@ -92,7 +92,7 @@ describe('PluggableComponent', () => {
     });
   });
 
-  test('updates component when pluggableComponentProps change', async () => {
+  test('updates component when props change', async () => {
     const { rerender } = render(
       <PluggableComponent
         id="test-pluggable"
