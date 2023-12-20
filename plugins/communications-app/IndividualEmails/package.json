@@ -1,0 +1,24 @@
+{
+  "name": "@openedx-plugins/communications-app-individual-emails",
+  "version": "1.0.0",
+  "description": "openedx autocomplete input and list of expecifict email",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "react-bootstrap-typeahead": "^6.3.2",
+    "uuid": "^9.0.1"
+  },
+  "peerDependencies": {
+    "@edx/frontend-app-communications": "*",
+    "@edx/frontend-platform": "*",
+    "@edx/paragon": "*",
+    "prop-types": "*",
+    "react": "*"
+  },
+  "peerDependenciesMeta": {
+    "@edx/frontend-app-communications": {
+      "optional": true
+    }
+  }
+}
