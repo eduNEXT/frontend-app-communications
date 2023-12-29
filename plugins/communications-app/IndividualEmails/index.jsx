@@ -59,7 +59,9 @@ const IndividualEmails = ({
 
   return (
     <Container className="col-12 my-5">
-      <Form.Label className="mt-3" data-testid="learners-email-input-label">{intl.formatMessage(messages.individualEmailsLabelLearnersInputLabel)}</Form.Label>
+      <Form.Label className="mt-3" data-testid="learners-email-input-label">
+        {intl.formatMessage(messages.individualEmailsLabelLearnersInputLabel)}
+      </Form.Label>
       <AsyncTypeahead
         filterBy={filterBy}
         id="async-autocompleinput"
@@ -74,12 +76,16 @@ const IndividualEmails = ({
         placeholder={intl.formatMessage(messages.individualEmailsLabelLearnersInputPlaceholder)}
         onChange={handleSelectedLearnerEmail}
         renderMenuItemChildren={({ name, email, username }) => (
-          <span data-testid="autocomplete-email-option">{name ? `${name} -` : name} {username ? `${username} -` : username} {email}</span>
+          <span data-testid="autocomplete-email-option">
+            {name ? `${name} -` : ''} {username ? `${username} -` : ''} {email}
+          </span>
         )}
       />
       {emailList.length > 0 && (
       <Container className="email-list">
-        <Form.Label className="col-12" data-testid="learners-email-list-label">{intl.formatMessage(messages.individualEmailsLabelLearnersListLabel)}</Form.Label>
+        <Form.Label className="col-12" data-testid="learners-email-list-label">
+          {intl.formatMessage(messages.individualEmailsLabelLearnersListLabel)}
+        </Form.Label>
         {emailList.map(({ id, email }) => (
           <Chip
             variant="light"
