@@ -34,7 +34,7 @@ describe('IndividualEmails Component', () => {
     </IntlProvider>
   );
 
-  it('renders the component without errors', () => {
+  test('renders the component without errors', () => {
     render(
       <IntlProviderWrapper>
         <IndividualEmails />
@@ -42,7 +42,7 @@ describe('IndividualEmails Component', () => {
     );
   });
 
-  it('displays the correct internationalized messages', () => {
+  test('displays the correct internationalized messages', () => {
     render(
       <IntlProviderWrapper>
         <IndividualEmails emailList={mockEmailList} />
@@ -62,7 +62,7 @@ describe('IndividualEmails Component', () => {
     expect(screen.getByTestId('learners-email-list-label')).toHaveTextContent(individualEmailsLabelLearnersListLabel.defaultMessage);
   });
 
-  it('renders the component with main components ', () => {
+  test('renders the component with main components ', () => {
     render(
       <IntlProviderWrapper>
         <IndividualEmails courseId="123" emailList={mockEmailList} />
@@ -78,7 +78,7 @@ describe('IndividualEmails Component', () => {
     expect(emailListLabel).toBeInTheDocument();
   });
 
-  it('should render two email chips', () => {
+  test('should render two email chips', () => {
     render(
       <IntlProviderWrapper>
         <IndividualEmails courseId="123" emailList={mockEmailList} />
@@ -89,7 +89,7 @@ describe('IndividualEmails Component', () => {
     expect(emailChips).toHaveLength(2);
   });
 
-  it('triggers search on typing in search box', async () => {
+  test('triggers search on typing in search box', async () => {
     const mockHandleEmailSelected = jest.fn();
     const mockCourseId = 'course123';
     render(
@@ -111,7 +111,7 @@ describe('IndividualEmails Component', () => {
     });
   });
 
-  it('invokes handleDeleteEmail when clicking on delete icons', () => {
+  test('invokes handleDeleteEmail when clicking on delete icons', () => {
     const mockHandleDeleteEmail = jest.fn();
     render(
       <IntlProviderWrapper>

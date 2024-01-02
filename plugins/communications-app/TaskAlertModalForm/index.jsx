@@ -91,8 +91,10 @@ const TaskAlertModalForm = ({
 
   const createEmailTask = async () => {
     const isScheduleValid = isScheduled ? scheduleDate.length > 0 && scheduleTime.length > 0 : true;
+    const isIndividualEmailsValid = (emailRecipients.includes('individual-learners') && emailLearnersList.length > 0)
+    || !emailRecipients.includes('individual-learners');
     const isFormValid = emailRecipients.length > 0 && subject.length > 0
-    && body.length > 0 && isScheduleValid;
+    && body.length > 0 && isScheduleValid && isIndividualEmailsValid;
 
     if (isFormValid && isEditMode) {
       await handlePatchEmailTask();

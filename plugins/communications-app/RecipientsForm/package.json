@@ -5,6 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "use-deep-compare-effect": "^1.8.1"
+  },
   "peerDependencies": {
     "@edx/frontend-app-communications": "*",
     "@edx/frontend-platform": "*",

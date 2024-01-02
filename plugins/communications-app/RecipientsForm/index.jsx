@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { Form } from '@edx/paragon';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import { useSelector, useDispatch } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context';
 import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context/reducer';
 import PluggableComponent from '@communications-app/src/components/PluggableComponent';
+import { BulkEmailContext } from '@communications-app/src/components/bulk-email-tool/bulk-email-context';
 
 import './styles.scss';
 
@@ -13,6 +15,7 @@ const recipientsFormDescription = 'A selectable choice from a list of potential 
 
 const RecipientsForm = ({ cohorts: additionalCohorts, courseId }) => {
   const formData = useSelector((state) => state.form);
+  const [{ editor }] = useContext(BulkEmailContext);
   const dispatch = useDispatch();
   const {
     isEditMode,
@@ -61,6 +64,17 @@ const RecipientsForm = ({ cohorts: additionalCohorts, courseId }) => {
   useEffect(() => {
     setSelectedGroups(emailRecipients);
   }, [isEditMode, emailRecipients.length, emailRecipients]);
+
+  useDeepCompareEffect(() => {
+    if (!editor.editMode) {
+      const newSubjectValue = editor.emailSubject;
+      const newBodyValue = editor.emailBody;
+      dispatch(formActions.updateForm({
+        subject: newSubjectValue,
+        body: newBodyValue,
+      }));
+    }
+  }, [editor, dispatch]);
 
   return (
     <Form.Group>

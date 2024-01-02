@@ -27,7 +27,7 @@ describe('getLearnersEmailInstructorTask', () => {
     });
   });
 
-  it('successfully fetches data', async () => {
+  test('successfully fetches data', async () => {
     const data = await getLearnersEmailInstructorTask(mockCourseId, mockSearch);
     expect(data).toEqual(mockResponseData);
     expect(getAuthenticatedHttpClient().get).toHaveBeenCalledWith(
@@ -35,7 +35,7 @@ describe('getLearnersEmailInstructorTask', () => {
     );
   });
 
-  it('handles an error', async () => {
+  test('handles an error', async () => {
     getAuthenticatedHttpClient().get.mockRejectedValue(new Error('Network error'));
 
     await expect(getLearnersEmailInstructorTask(mockCourseId, mockSearch)).rejects.toThrow('Network error');

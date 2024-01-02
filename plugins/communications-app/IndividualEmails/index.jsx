@@ -8,8 +8,9 @@ import {
   Container,
 } from '@edx/paragon';
 import { Person, Close } from '@edx/paragon/icons';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl, FormattedMessage } from '@edx/frontend-platform/i18n';
 import { logError } from '@edx/frontend-platform/logging';
+import { useSelector } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context';
 
 import { getLearnersEmailInstructorTask } from './api';
 import messages from './messages';
@@ -26,6 +27,8 @@ const IndividualEmails = ({
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState([]);
   const [inputValue] = useState([]);
+  const formData = useSelector((state) => state.form);
+  const { isFormSubmitted } = formData;
 
   const handleSearchEmailLearners = async (userEmail) => {
     setIsLoading(true);
@@ -57,6 +60,8 @@ const IndividualEmails = ({
     }
   };
 
+  const isIndividualEmailsInvalid = isFormSubmitted && emailList.length === 0;
+
   return (
     <Container className="col-12 my-5">
       <Form.Label className="mt-3" data-testid="learners-email-input-label">
@@ -81,6 +86,21 @@ const IndividualEmails = ({
           </span>
         )}
       />
+
+      { isIndividualEmailsInvalid && (
+      <Form.Control.Feedback
+        className="px-2 my-2"
+        type="invalid"
+        hasIcon
+      >
+        <FormattedMessage
+          id="bulk.email.form.email.learners.error"
+          defaultMessage="At least one email is required"
+          description="An Error message located under the recipients list. Visible only on failure"
+        />
+      </Form.Control.Feedback>
+      )}
+
       {emailList.length > 0 && (
       <Container className="email-list">
         <Form.Label className="col-12" data-testid="learners-email-list-label">
