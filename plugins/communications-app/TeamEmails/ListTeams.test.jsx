@@ -5,7 +5,7 @@ import { IntlProvider } from 'react-intl';
 import ListTeams from './ListTeams';
 
 describe('ListTeams component', () => {
-  // eslint-disable-next-line no-unused-vars, react/prop-types
+  // eslint-disable-next-line react/prop-types
   const IntlProviderWrapper = ({ children }) => (
     <IntlProvider locale="en" messages={{}}>
       {children}
