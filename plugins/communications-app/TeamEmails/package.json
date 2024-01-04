@@ -1,0 +1,24 @@
+{
+  "name": "@openedx-plugins/communications-app-team-emails",
+  "version": "1.0.0",
+  "description": "openedx recipients for sending emails to a teams",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "use-deep-compare-effect": "^1.8.1",
+    "humps": "^2.0.1"
+  },
+  "peerDependencies": {
+    "@edx/frontend-app-communications": "*",
+    "@edx/frontend-platform": "*",
+    "@edx/paragon": "*",
+    "prop-types": "*",
+    "react": "*"
+  },
+  "peerDependenciesMeta": {
+    "@edx/frontend-app-communications": {
+      "optional": true
+    }
+  }
+}

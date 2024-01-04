@@ -22,6 +22,7 @@ const RecipientsForm = ({ cohorts: additionalCohorts, courseId }) => {
     emailRecipients,
     isFormSubmitted,
     emailLearnersList = [],
+    teamsList = [],
   } = formData;
 
   const [selectedGroups, setSelectedGroups] = useState([]);
@@ -60,6 +61,8 @@ const RecipientsForm = ({ cohorts: additionalCohorts, courseId }) => {
     const setEmailLearnersListUpdated = emailLearnersList.filter(({ id }) => id !== idToDelete);
     dispatch(formActions.updateForm({ emailLearnersList: setEmailLearnersListUpdated }));
   };
+
+  const isInvalidRecipients = teamsList.length === 0 && selectedGroups.length === 0;
 
   useEffect(() => {
     setSelectedGroups(emailRecipients);
@@ -194,7 +197,13 @@ const RecipientsForm = ({ cohorts: additionalCohorts, courseId }) => {
       />
       )}
 
-      { isFormSubmitted && selectedGroups.length === 0 && (
+      <PluggableComponent
+        id="team-emails"
+        as="communications-app-team-emails"
+        courseId={courseId}
+      />
+
+      { isFormSubmitted && isInvalidRecipients && (
         <Form.Control.Feedback
           className="px-3"
           type="invalid"
