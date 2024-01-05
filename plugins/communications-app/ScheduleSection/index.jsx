@@ -26,7 +26,12 @@ import { actionCreators as formActions } from '@communications-app/src/component
 import messages from './messages';
 import './styles.scss';
 
-const formStatusToast = ['error', 'complete', 'completeSchedule', 'loadingTeams'];
+const ERROR = 'error';
+const COMPLETE = 'complete';
+const COMPLETE_SCHEDULE = 'completeSchedule';
+const LOADING_TEAMS = 'loadingTeams';
+const PENDING = 'pending';
+const formStatusToast = [ERROR, COMPLETE, COMPLETE_SCHEDULE, LOADING_TEAMS];
 
 const ScheduleSection = ({ openTaskAlert }) => {
   const intl = useIntl();
@@ -107,10 +112,10 @@ const ScheduleSection = ({ openTaskAlert }) => {
   }), [intl]);
 
   const statefulButtonDisableStates = useMemo(() => [
-    'pending',
-    'complete',
-    'completeSchedule',
-    isLoadingTeams ? 'loadingTeams' : '',
+    PENDING,
+    COMPLETE,
+    COMPLETE_SCHEDULE,
+    isLoadingTeams ? LOADING_TEAMS : '',
   ], [isLoadingTeams]);
 
   return (
@@ -159,7 +164,7 @@ const ScheduleSection = ({ openTaskAlert }) => {
             data-testid="send-email-btn"
             variant="primary"
             onClick={handleClickStatefulButton}
-            state={isLoadingTeams ? 'loadingTeams' : formStatus}
+            state={isLoadingTeams ? LOADING_TEAMS : formStatus}
             icons={statefulButtonIcons}
             labels={statefulButtonLabels}
             disabledStates={statefulButtonDisableStates}

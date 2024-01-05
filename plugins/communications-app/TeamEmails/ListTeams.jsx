@@ -12,7 +12,7 @@ const ListTeams = ({ teams, onChangeCheckBox, teamsSelected }) => (
       <Form.Checkbox
         key={`team:${name}_${id}`}
         value={id}
-        className="mr-2 team-checkbox"
+        className="mr-4 mb-4 team-checkbox"
         data-testid={`team:${id}`}
         onChange={onChangeCheckBox}
         checked={teamsSelected.includes(id)}
