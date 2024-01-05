@@ -7,6 +7,7 @@ import {
   Form,
   Icon,
   Toast,
+  Spinner,
 } from '@edx/paragon';
 import {
   SpinnerSimple,
@@ -23,8 +24,9 @@ import { useSelector, useDispatch } from '@communications-app/src/components/bul
 import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context/reducer';
 
 import messages from './messages';
+import './styles.scss';
 
-const formStatusToast = ['error', 'complete', 'completeSchedule'];
+const formStatusToast = ['error', 'complete', 'completeSchedule', 'loadingTeams'];
 
 const ScheduleSection = ({ openTaskAlert }) => {
   const intl = useIntl();
@@ -39,6 +41,7 @@ const ScheduleSection = ({ openTaskAlert }) => {
     isEditMode,
     formStatus,
     isScheduledSubmitted = false,
+    isLoadingTeams = false,
   } = formData;
 
   const formStatusErrors = {
@@ -89,7 +92,7 @@ const ScheduleSection = ({ openTaskAlert }) => {
     complete: <Icon src={Check} />,
     completeSchedule: <Icon src={Check} />,
     error: <Icon src={Cancel} />,
-    loadingTeams: <Icon src={Send} />,
+    isLoadingTeams: <Icon src={Send} />,
   }), []);
 
   const statefulButtonLabels = useMemo(() => ({
@@ -100,15 +103,15 @@ const ScheduleSection = ({ openTaskAlert }) => {
     complete: intl.formatMessage(messages.ScheduleSectionSubmitButtonComplete),
     completeSchedule: intl.formatMessage(messages.ScheduleSectionSubmitButtonCompleteSchedule),
     error: intl.formatMessage(messages.ScheduleSectionSubmitButtonError),
-    loadingTeams: intl.formatMessage(messages.ScheduleSectionSubmitButtonLoadingTeams),
+    loadingTeams: intl.formatMessage(messages.ScheduleSectionSubmitButtonDefault),
   }), [intl]);
 
   const statefulButtonDisableStates = useMemo(() => [
     'pending',
     'complete',
     'completeSchedule',
-    'loadingTeams',
-  ], []);
+    isLoadingTeams ? 'loadingTeams' : '',
+  ], [isLoadingTeams]);
 
   return (
     <Form.Group>
@@ -150,16 +153,32 @@ const ScheduleSection = ({ openTaskAlert }) => {
         </Button>
         )}
 
-        <StatefulButton
-          className="send-email-btn"
-          data-testid="send-email-btn"
-          variant="primary"
-          onClick={handleClickStatefulButton}
-          state={formStatus}
-          icons={statefulButtonIcons}
-          labels={statefulButtonLabels}
-          disabledStates={statefulButtonDisableStates}
-        />
+        <div className="d-flex flex-column">
+          <StatefulButton
+            className="send-email-btn"
+            data-testid="send-email-btn"
+            variant="primary"
+            onClick={handleClickStatefulButton}
+            state={isLoadingTeams ? 'loadingTeams' : formStatus}
+            icons={statefulButtonIcons}
+            labels={statefulButtonLabels}
+            disabledStates={statefulButtonDisableStates}
+          />
+          {isLoadingTeams && (
+          <Form.Control.Feedback
+            className="mt-1"
+            icon={(
+              <Spinner
+                animation="border"
+                className="mie-3 loading-teams-spinner__medium"
+                screenReaderText="loading"
+              />
+            )}
+          >
+            {intl.formatMessage(messages.ScheduleSectionSubmitButtonFeedBackLoadingTeams)}
+          </Form.Control.Feedback>
+          )}
+        </div>
 
         <Toast
           show={formStatusToast.includes(formStatus)}

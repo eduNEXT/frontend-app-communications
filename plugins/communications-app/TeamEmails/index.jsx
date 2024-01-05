@@ -8,6 +8,7 @@ import {
 import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context/reducer';
 
 import ListTeams from './ListTeams';
+import FeedbackMessage from './FeedbackMessage';
 import messages from './messages';
 import { getTopicsList } from './api';
 import { getTeamsFromTopics, convertSnakeCaseToCamelCase } from './utils';
@@ -41,7 +42,7 @@ const TeamEmails = ({ courseId }) => {
       if (next) {
         fetchTeams(page + 1);
       } else {
-        dispatch(formActions.updateForm({ formStatus: 'default' }));
+        dispatch(formActions.updateForm({ isLoadingTeams: false }));
       }
     } catch (error) {
       console.error('There was an error while getting teams:', error.message);
@@ -57,10 +58,10 @@ const TeamEmails = ({ courseId }) => {
 
   useEffect(() => {
     if (loadingTeams) {
-      dispatch(formActions.updateForm({ formStatus: 'loadingTeams' }));
+      dispatch(formActions.updateForm({ isLoadingTeams: true }));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formStatus, loadingTeams]);
+  }, [loadingTeams]);
 
   useEffect(() => {
     if (teams.length) {
@@ -111,6 +112,9 @@ const TeamEmails = ({ courseId }) => {
         teamsSelected={checkedTeams}
         onChangeCheckBox={handleChangeTeamCheckBox}
       />
+      {loadingTeams && (
+        <FeedbackMessage title={intl.formatMessage(messages.teamEmailsFeedBackLoadingTeams)} />
+      )}
     </div>
   );
 };

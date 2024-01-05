@@ -48,9 +48,10 @@ const messages = defineMessages({
     id: 'schedule.section.submit.button.schedule.complete',
     defaultMessage: 'Scheduling Done',
   },
-  ScheduleSectionSubmitButtonLoadingTeams: {
-    id: 'schedule.section.submit.button.loading.teams',
+  ScheduleSectionSubmitButtonFeedBackLoadingTeams: {
+    id: 'schedule.section.submit.button.feedback.loading.teams',
     defaultMessage: 'Loading teams',
+    description: 'A loading shown to the user while teams are being fetching',
   },
 });
 
