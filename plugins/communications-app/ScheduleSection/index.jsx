@@ -89,6 +89,7 @@ const ScheduleSection = ({ openTaskAlert }) => {
     complete: <Icon src={Check} />,
     completeSchedule: <Icon src={Check} />,
     error: <Icon src={Cancel} />,
+    loadingTeams: <Icon src={Send} />,
   }), []);
 
   const statefulButtonLabels = useMemo(() => ({
@@ -99,12 +100,14 @@ const ScheduleSection = ({ openTaskAlert }) => {
     complete: intl.formatMessage(messages.ScheduleSectionSubmitButtonComplete),
     completeSchedule: intl.formatMessage(messages.ScheduleSectionSubmitButtonCompleteSchedule),
     error: intl.formatMessage(messages.ScheduleSectionSubmitButtonError),
+    loadingTeams: intl.formatMessage(messages.ScheduleSectionSubmitButtonLoadingTeams),
   }), [intl]);
 
   const statefulButtonDisableStates = useMemo(() => [
     'pending',
     'complete',
     'completeSchedule',
+    'loadingTeams',
   ], []);
 
   return (

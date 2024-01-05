@@ -9,7 +9,7 @@ import { actionCreators as formActions } from '@communications-app/src/component
 
 import ListTeams from './ListTeams';
 import messages from './messages';
-import { getTeamsList } from './api';
+import { getTopicsList } from './api';
 import { getTeamsFromTopics, convertSnakeCaseToCamelCase } from './utils';
 
 const TeamEmails = ({ courseId }) => {
@@ -24,24 +24,43 @@ const TeamEmails = ({ courseId }) => {
   } = formData;
   const [teams, setTeams] = useState([]);
   const [checkedTeams, setCheckedTeams] = useState([]);
+  const [loadingTeams, setLoadingTeams] = useState(false);
   const previousFormStatusRef = useRef(null);
 
-  useEffect(() => {
-    const getTeamsFromApi = async () => {
-      try {
-        const responseTeams = await getTeamsList(courseId);
-        const { results } = responseTeams.data;
-        const camelCaseResult = convertSnakeCaseToCamelCase(results);
-        const formatResult = getTeamsFromTopics(camelCaseResult);
-        setTeams(formatResult);
-      } catch (error) {
-        console.error('there was an error while getting teams', error.messages);
-      }
-    };
+  const fetchTeams = async (page = 1) => {
+    try {
+      setLoadingTeams(true);
+      const responseTopics = await getTopicsList(courseId, page);
+      const { results, next } = responseTopics.data;
 
-    getTeamsFromApi();
+      const camelCaseResult = convertSnakeCaseToCamelCase(results);
+      const formatResult = getTeamsFromTopics(camelCaseResult);
+
+      setTeams((prevTeams) => [...prevTeams, ...formatResult]);
+
+      if (next) {
+        fetchTeams(page + 1);
+      } else {
+        dispatch(formActions.updateForm({ formStatus: 'default' }));
+      }
+    } catch (error) {
+      console.error('There was an error while getting teams:', error.message);
+    } finally {
+      setLoadingTeams(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTeams();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseId]);
+
+  useEffect(() => {
+    if (loadingTeams) {
+      dispatch(formActions.updateForm({ formStatus: 'loadingTeams' }));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formStatus, loadingTeams]);
 
   useEffect(() => {
     if (teams.length) {

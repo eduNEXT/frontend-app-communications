@@ -148,7 +148,7 @@ describe('TeamEmails Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    api.getTeamsList.mockResolvedValue({ data: mockData });
+    api.getTopicsList.mockResolvedValue({ data: mockData });
     useSelector.mockImplementation((selectorFn) => selectorFn({
       form: {
         teamsList: [],
@@ -169,7 +169,7 @@ describe('TeamEmails Component', () => {
   );
 
   test('renders the component without errors', async () => {
-    api.getTeamsList.mockResolvedValue({ data: mockData });
+    api.getTopicsList.mockResolvedValue({ data: mockData });
 
     render(
       <IntlProviderWrapper>
@@ -189,7 +189,7 @@ describe('TeamEmails Component', () => {
   });
 
   test('renders null when teams are empty', async () => {
-    api.getTeamsList.mockResolvedValue({ data: { results: [] } });
+    api.getTopicsList.mockResolvedValue({ data: { results: [] } });
     render(
       <IntlProviderWrapper>
         <TeamEmails courseId="course-placeholder-id" />
@@ -205,7 +205,7 @@ describe('TeamEmails Component', () => {
   test('handles checkbox change', async () => {
     const mockDispatch = jest.fn();
     useDispatch.mockReturnValue(mockDispatch);
-    api.getTeamsList.mockResolvedValue({ data: mockData });
+    api.getTopicsList.mockResolvedValue({ data: mockData });
 
     render(
       <IntlProviderWrapper>
@@ -220,9 +220,9 @@ describe('TeamEmails Component', () => {
     });
   });
 
-  test('handles error when api.getTeamsList fails', async () => {
+  test('handles error when api.getTopicsList fails', async () => {
     const mockedError = new Error('API Failed');
-    api.getTeamsList.mockRejectedValue(mockedError);
+    api.getTopicsList.mockRejectedValue(mockedError);
 
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -233,7 +233,7 @@ describe('TeamEmails Component', () => {
     );
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith('there was an error while getting teams', mockedError.messages);
+      expect(consoleSpy).toHaveBeenCalledWith('There was an error while getting teams:', mockedError.message);
     });
 
     consoleSpy.mockRestore();

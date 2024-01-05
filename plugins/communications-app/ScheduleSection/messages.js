@@ -48,6 +48,10 @@ const messages = defineMessages({
     id: 'schedule.section.submit.button.schedule.complete',
     defaultMessage: 'Scheduling Done',
   },
+  ScheduleSectionSubmitButtonLoadingTeams: {
+    id: 'schedule.section.submit.button.loading.teams',
+    defaultMessage: 'Loading teams',
+  },
 });
 
 export default messages;

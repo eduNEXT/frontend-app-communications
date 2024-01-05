@@ -1,7 +1,7 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { getConfig } from '@edx/frontend-platform';
 
-import { getTeamsList } from './api';
+import { getTopicsList } from './api';
 
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedHttpClient: jest.fn(),
@@ -10,7 +10,7 @@ jest.mock('@edx/frontend-platform', () => ({
   getConfig: jest.fn(),
 }));
 
-describe('getTeamsList function', () => {
+describe('getTopicsList function', () => {
   const mockCourseId = 'course123';
   const mockResponseData = { data: 'someData' };
   const mockConfig = { LMS_BASE_URL: 'http://localhost' };
@@ -23,11 +23,11 @@ describe('getTeamsList function', () => {
   });
 
   test('successfully fetches teams list with default parameters', async () => {
-    const response = await getTeamsList(mockCourseId);
+    const response = await getTopicsList(mockCourseId);
 
     expect(response).toEqual(mockResponseData);
     expect(getAuthenticatedHttpClient().get).toHaveBeenCalledWith(
-      `http://localhost/platform-plugin-teams/${mockCourseId}/api/topics/?page=1&pageSize=100`,
+      `http://localhost/platform-plugin-teams/${mockCourseId}/api/topics/?page=1&page_size=100`,
     );
   });
 
@@ -35,11 +35,11 @@ describe('getTeamsList function', () => {
     const customPage = 2;
     const customPageSize = 50;
 
-    const response = await getTeamsList(mockCourseId, customPage, customPageSize);
+    const response = await getTopicsList(mockCourseId, customPage, customPageSize);
 
     expect(response).toEqual(mockResponseData);
     expect(getAuthenticatedHttpClient().get).toHaveBeenCalledWith(
-      `http://localhost/platform-plugin-teams/${mockCourseId}/api/topics/?page=${customPage}&pageSize=${customPageSize}`,
+      `http://localhost/platform-plugin-teams/${mockCourseId}/api/topics/?page=${customPage}&page_size=${customPageSize}`,
     );
   });
 
@@ -47,6 +47,6 @@ describe('getTeamsList function', () => {
     const errorMessage = 'Network error';
     getAuthenticatedHttpClient().get.mockRejectedValue(new Error(errorMessage));
 
-    await expect(getTeamsList(mockCourseId)).rejects.toThrow(errorMessage);
+    await expect(getTopicsList(mockCourseId)).rejects.toThrow(errorMessage);
   });
 });
