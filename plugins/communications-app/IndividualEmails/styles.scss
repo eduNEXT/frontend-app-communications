@@ -1,0 +1,21 @@
+$light-gray: #ccc;
+$dark-gray: #f0f0f0;
+
+.email-list {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid $light-gray;
+  padding: 10px;
+  margin-top: 16px;
+}
+
+.email-chip {
+  background-color: $dark-gray;
+  border: 1px solid $dark-gray;
+  border-radius: 20px;
+  padding: 5px 10px;
+  margin: 5px;
+  display: flex;
+  align-items: center;
+}

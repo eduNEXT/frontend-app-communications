@@ -23,3 +23,14 @@ export async function patchScheduledBulkEmailInstructorTask(emailData, courseId,
     throw new Error(error);
   }
 }
+
+export async function postBulkEmailInstructorTaskSendEmails(emailData, courseId) {
+  try {
+    const url = `${getConfig().LMS_BASE_URL}/platform-plugin-communications/${courseId}/api/send_email`;
+    const response = await getAuthenticatedHttpClient().post(url, emailData);
+    return response;
+  } catch (error) {
+    logError(error);
+    throw new Error(error);
+  }
+}

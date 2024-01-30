@@ -6,7 +6,7 @@ import { BulkEmailContext } from '@communications-app/src/components/bulk-email-
 import { useSelector, useDispatch } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context';
 import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context/reducer';
 
-import { postBulkEmailInstructorTask, patchScheduledBulkEmailInstructorTask } from './api';
+import { postBulkEmailInstructorTaskSendEmails, patchScheduledBulkEmailInstructorTask } from './api';
 import { AlertMessage, EditMessage } from './AlertTypes';
 
 const TaskAlertModalForm = ({
@@ -30,17 +30,22 @@ const TaskAlertModalForm = ({
     body,
     isScheduleButtonClicked = false,
     isFormSubmitted = false,
+    emailLearnersList = [],
   } = formData;
 
   const changeFormStatus = (status) => dispatchForm(formActions.updateForm({ formStatus: status }));
   const handleResetFormValues = () => dispatchForm(formActions.resetForm());
 
   const handlePostEmailTask = async () => {
+    const emailRecipientsFormat = emailRecipients.filter((recipient) => recipient !== 'individual-learners');
+    const emailsLearners = emailLearnersList.map(({ email }) => email);
+    const extraTargets = { emails: emailsLearners };
     const emailData = new FormData();
     emailData.append('action', 'send');
-    emailData.append('send_to', JSON.stringify(emailRecipients));
+    emailData.append('send_to', JSON.stringify(emailRecipientsFormat));
     emailData.append('subject', subject);
     emailData.append('message', body);
+    emailData.append('extra_targets', JSON.stringify(extraTargets));
 
     if (isScheduled) {
       emailData.append('schedule', new Date(`${scheduleDate} ${scheduleTime}`).toISOString());
@@ -49,7 +54,7 @@ const TaskAlertModalForm = ({
     changeFormStatus('pending');
 
     try {
-      await postBulkEmailInstructorTask(emailData, courseId);
+      await postBulkEmailInstructorTaskSendEmails(emailData, courseId);
       const newFormStatus = isScheduled ? 'completeSchedule' : 'complete';
       changeFormStatus(newFormStatus);
       setTimeout(() => handleResetFormValues(), 3000);
@@ -86,8 +91,10 @@ const TaskAlertModalForm = ({
 
   const createEmailTask = async () => {
     const isScheduleValid = isScheduled ? scheduleDate.length > 0 && scheduleTime.length > 0 : true;
+    const isIndividualEmailsValid = (emailRecipients.includes('individual-learners') && emailLearnersList.length > 0)
+    || !emailRecipients.includes('individual-learners');
     const isFormValid = emailRecipients.length > 0 && subject.length > 0
-    && body.length > 0 && isScheduleValid;
+    && body.length > 0 && isScheduleValid && isIndividualEmailsValid;
 
     if (isFormValid && isEditMode) {
       await handlePatchEmailTask();
