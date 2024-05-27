@@ -31,15 +31,19 @@ const TaskAlertModalForm = ({
     isScheduleButtonClicked = false,
     isFormSubmitted = false,
     emailLearnersList = [],
+    teamsList = [],
+    teamsListFullData = [],
   } = formData;
 
   const changeFormStatus = (status) => dispatchForm(formActions.updateForm({ formStatus: status }));
   const handleResetFormValues = () => dispatchForm(formActions.resetForm());
 
   const handlePostEmailTask = async () => {
-    const emailRecipientsFormat = emailRecipients.filter((recipient) => recipient !== 'individual-learners');
+    const teamsNames = teamsListFullData.map(({ name }) => name);
+    const invalidRecipients = ['individual-learners', ...teamsNames];
+    const emailRecipientsFormat = emailRecipients.filter((recipient) => !invalidRecipients.includes(recipient));
     const emailsLearners = emailLearnersList.map(({ email }) => email);
-    const extraTargets = { emails: emailsLearners };
+    const extraTargets = { emails: emailsLearners, teams: teamsList };
     const emailData = new FormData();
     emailData.append('action', 'send');
     emailData.append('send_to', JSON.stringify(emailRecipientsFormat));
@@ -93,7 +97,8 @@ const TaskAlertModalForm = ({
     const isScheduleValid = isScheduled ? scheduleDate.length > 0 && scheduleTime.length > 0 : true;
     const isIndividualEmailsValid = (emailRecipients.includes('individual-learners') && emailLearnersList.length > 0)
     || !emailRecipients.includes('individual-learners');
-    const isFormValid = emailRecipients.length > 0 && subject.length > 0
+    const isValidRecipients = emailRecipients.length > 0 || teamsList.length > 0;
+    const isFormValid = isValidRecipients && subject.length > 0
     && body.length > 0 && isScheduleValid && isIndividualEmailsValid;
 
     if (isFormValid && isEditMode) {
