@@ -176,7 +176,7 @@ const RecipientsForm = ({ cohorts: additionalCohorts, courseId }) => {
           disabled={hasAllLearnersSelected}
         >
           <FormattedMessage
-            id="bulk.email.form.recipients.learners"
+            id="bulk.email.form.recipients.individual_learners"
             defaultMessage="Individual learners"
             description="A selectable choice from a list of potential to add an email list of learners"
           />
